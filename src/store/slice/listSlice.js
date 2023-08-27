@@ -4,23 +4,36 @@ const initialState = {
     createToDo : {
       status: 'idle',
       todolist: null
+    },
+    getTodo: {
+      status: 'idle',
+      alltodolist: null
     }
 };
 
-
+// todolist post request
 export const createToDoList = createAsyncThunk(
   "createToDoList",
   async (todolist) => {
     const response = await axios.post("/create", todolist);
-    console.log(response)
     return response.data;
   }
 )
+
+export const getToDoList = createAsyncThunk(
+  "getToDoList",
+  async () => {
+    const response = await axios.get("/todo");
+    return response.data;
+  }
+)
+
 export const listSlice = createSlice({
   name: "todolist",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // craetetodolist case
     builder
       .addCase(createToDoList.pending, (state) => {
         state.createToDo.status = "loading";
@@ -29,8 +42,15 @@ export const listSlice = createSlice({
         state.createToDo.status = "successful";
         state.todolist = payload;
       });
-    // builder
-
+    // get all to do list
+    builder
+      .addCase(getToDoList.pending, (state) => {
+        state.getTodo.status = "loading";
+      })
+      .addCase(getToDoList.fulfilled, (state, { payload }) => {
+        state.getTodo.status = "successful";
+        state.getTodo = payload;
+      });
   },
 });
 
