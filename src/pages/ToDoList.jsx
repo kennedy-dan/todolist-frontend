@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createToDoList, getToDoList, deleteToDoList } from "../store/slice/listSlice";
+import {
+  createToDoList,
+  getToDoList,
+  deleteToDoList,
+  editToDoList,
+} from "../store/slice/listSlice";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import EditModal from "../components/EditModal";
 const ToDoList = () => {
   const dispatch = useDispatch();
   const [todolist, settodolist] = useState("");
   const [openEdit, setopenEdit] = useState(false);
-  const { getTodo, createToDo, deleteTodo } = useSelector((state) => state.list);
+  const [editTodo, seteditTodo] = useState();
+  const { getTodo, createToDo, deleteTodo, editTodos } = useSelector(
+    (state) => state.list
+  );
   const submit = () => {
     console.log({ todolist: todolist });
     dispatch(createToDoList({ todolist: todolist }));
   };
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       // If the Enter key is pressed, trigger the request
-      submit()
+      submit();
     }
   };
   function formatDate(inputDate) {
@@ -56,16 +65,18 @@ const ToDoList = () => {
 
   useEffect(() => {
     dispatch(getToDoList());
-  }, [dispatch, createToDo.status, deleteTodo.status]);
+  }, [dispatch, createToDo.status, deleteTodo.status, editTodos.status]);
   console.log(todolistData);
 
   const delteTodo = (id) => {
-    dispatch(deleteToDoList(id))
-  }
+    dispatch(deleteToDoList(id));
+  };
 
-  const openEditModal = () => {
-
-  }
+  const openEditModal = (todos) => {
+    setopenEdit(true);
+    seteditTodo(todos);
+  };
+  console.log(editTodo);
 
   return (
     <div>
@@ -80,7 +91,9 @@ const ToDoList = () => {
               className="w-1/2  rounded-md shadow-lg outline-none outline-1 bg-slate-4 mt-1 py-2  tracking-[2px] leading-loose  text-black text-[13px] px-2 "
               placeholder="create new list"
             />
-            <button className="hidden" onClick={submit}>Submit</button>
+            <button className="hidden" onClick={submit}>
+              Submit
+            </button>
           </div>
           <div className="grid grid-cols-3 gap-4 mt-8">
             {todolistData?.map((todos, index) => (
@@ -95,21 +108,38 @@ const ToDoList = () => {
                   className="outline-none w-full h-fit"
                 /> */}
                 <div className="flex w-full items-center justify-between">
-                <p className="pt-4 text-[12px] font-semibold">
+                  <p className="pt-4 text-[12px] font-semibold">
                     {todos.formattedDate}
                   </p>
-                    <button className="pt-4" onClick={() => delteTodo(todos.id)}>
-                        <AiOutlineDelete />
+                  <div>
+                    <button
+                      className="pt-4"
+                      onClick={() => delteTodo(todos.id)}
+                    >
+                      <AiOutlineDelete />
                     </button>
-                    <button className="pt-4" onClick={openEditModal}>
-                        <AiOutlineEdit />
+                    <button
+                      className="pt-4"
+                      onClick={() => openEditModal(todos)}
+                    >
+                      <AiOutlineEdit />
                     </button>
-                
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+        {openEdit ? (
+          <EditModal
+            openEdit={openEdit}
+            setopenEdit={setopenEdit}
+            editTodo={editTodo}
+            editToDoList={editToDoList}
+          />
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

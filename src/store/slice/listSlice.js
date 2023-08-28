@@ -12,6 +12,10 @@ const initialState = {
     deleteTodo: {
       status: 'idle',
       deletetodo: null
+    },
+    editTodos: {
+      status: 'idle',
+      edittodo: null
     }
 };
 
@@ -20,6 +24,7 @@ export const createToDoList = createAsyncThunk(
   "createToDoList",
   async (todolist) => {
     const response = await axios.post("/create", todolist);
+    
     return response.data;
   }
 )
@@ -35,6 +40,17 @@ export const deleteToDoList = createAsyncThunk(
   "deleteToDoList",
   async (todo) => {
     const response = await axios.delete(`/delete/${todo}`);
+    return response.data;
+  }
+)
+
+export const editToDoList = createAsyncThunk(
+  "editToDoList",
+  async (todolist ) => {
+    console.log(todolist.todolist)
+    
+    const response = await axios.put(`/update/${todolist.id}`, {todolist:todolist.todolist});
+   
     return response.data;
   }
 )
@@ -70,6 +86,14 @@ export const listSlice = createSlice({
       .addCase(deleteToDoList.fulfilled, (state, { payload }) => {
         state.deleteTodo.status = "successful";
         state.deleteTodo.deletetodo = payload;
+      });
+      builder
+      .addCase(editToDoList.pending, (state) => {
+        state.getTodo.status = "loading";
+      })
+      .addCase(editToDoList.fulfilled, (state, { payload }) => {
+        state.editTodos.status = "successful";
+        state.editTodos.edittodo = payload;
       });
   },
 });
