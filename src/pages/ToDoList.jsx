@@ -8,28 +8,33 @@ import {
 } from "../store/slice/listSlice";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import EditModal from "../components/EditModal";
+import { ClipLoader } from "react-spinners";
+
 const ToDoList = () => {
   const dispatch = useDispatch();
   const [todolist, settodolist] = useState("");
   const [openEdit, setopenEdit] = useState(false);
   const [editTodo, seteditTodo] = useState();
-  const { getTodo, createToDo, deleteTodo, editTodos } = useSelector(
+  const { getTodo, createToDo, deleteTodo, editTodos, status } = useSelector(
     (state) => state.list
   );
   const submit = () => {
     console.log({ todolist: todolist });
     dispatch(createToDoList({ todolist: todolist }));
   };
+  //use enter keywor to send request
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       // If the Enter key is pressed, trigger the request
       submit();
     }
   };
+
+  //pass the date from the database to the function
   function formatDate(inputDate) {
-    // const inputDateString = "2023-08-27T14:47:52.944+00:00";
+    
     const inputDateString = new Date(inputDate);
-    console.log(inputDateString);
+    //set data options to 2 digits
     const options = {
       year: "2-digit",
       month: "2-digit",
@@ -39,12 +44,15 @@ const ToDoList = () => {
       second: "2-digit",
       hour12: true,
     };
+    //formatt date
     const formattedDateTime = new Intl.DateTimeFormat("en-US", options).format(
       inputDateString
     );
     return formattedDateTime;
   }
-  const formattedDates = getTodo?.todos?.map((obj) => ({
+
+
+  const formattedDates = getTodo?.alltodolist?.todos?.map((obj) => ({
     id: obj._id,
     todolist: obj.todolist,
     formattedDate: formatDate(obj.createdAt),
@@ -54,19 +62,15 @@ const ToDoList = () => {
 
   console.log(formattedDates);
 
-  const handleChange = (index, newValue) => {
-    const updatedItems = [...todolistData];
-    updatedItems[index].todolist = newValue;
-    settodolistData(updatedItems);
-  };
   useEffect(() => {
     settodolistData(formattedDates);
   }, [getTodo]);
 
+  //dispatch gettodos if there is a change in status
   useEffect(() => {
     dispatch(getToDoList());
   }, [dispatch, createToDo.status, deleteTodo.status, editTodos.status]);
-  console.log(todolistData);
+ 
 
   const delteTodo = (id) => {
     dispatch(deleteToDoList(id));
@@ -80,9 +84,11 @@ const ToDoList = () => {
 
   return (
     <div>
-      <div className="flex justify-around mx-8 font-[Poppins]">
-        <div className="w-[10%]"></div>
-        <div className="w-[70%]">
+      <div className="flex justify-around md:mx-8 mx-3  font-[Poppins]">
+        <div className="md:w-[10%] border-r-2 h-screen hidden lg:block border-gray-500">
+            <p className="mt-10">My Todo</p>
+        </div>
+        <div className="lg:w-[70%] md:w-[90%] w-[100%] mt-10">
           <div className="flex justify-center ">
             <input
               value={todolist}
@@ -95,41 +101,41 @@ const ToDoList = () => {
               Submit
             </button>
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-8">
-            {todolistData?.map((todos, index) => (
-              <div className="rounded-md h-fit  w- outline-1 px-2 outline-gray-300 outline">
-                <p>{todos.todolist}</p>
-                {/* <div classNam></div> */}
-                {/* <input
-                  key={index}
-                  value={todos.todolist}
-                  type="text"
-                  onChange={(e) => handleChange(index, e.target.value)}
-                  className="outline-none w-full h-fit"
-                /> */}
-                <div className="flex w-full items-center justify-between">
-                  <p className="pt-4 text-[12px] font-semibold">
-                    {todos.formattedDate}
-                  </p>
-                  <div>
-                    <button
-                      className="pt-4"
-                      onClick={() => delteTodo(todos.id)}
-                    >
-                      <AiOutlineDelete />
-                    </button>
-                    <button
-                      className="pt-4"
-                      onClick={() => openEditModal(todos)}
-                    >
-                      <AiOutlineEdit />
-                    </button>
+          {status === "loading" && (
+            <div className='flex mt-10 justify-center'>
+              <ClipLoader />
+            </div>
+          )}
+          {status === "successful" && (
+            <div className="grid md:grid-cols-3 grid-cols-2 gap-4 mt-8">
+              {todolistData?.map((todos, index) => (
+                <div className="rounded-md h-fit shadow-sm  w- outline-1 px-2 outline-gray-300 outline">
+                  <p>{todos.todolist}</p>
+                  <div className="flex w-full items-center justify-between">
+                    <p className="pt-4 md:text-[12px] text-[10px] font-semibold">
+                      {todos.formattedDate}
+                    </p>
+                    <div>
+                      <button
+                        className="pt-4"
+                        onClick={() => delteTodo(todos.id)}
+                      >
+                        <AiOutlineDelete />
+                      </button>
+                      <button
+                        className="pt-4"
+                        onClick={() => openEditModal(todos)}
+                      >
+                        <AiOutlineEdit />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
+         {/* open edit  modal */}
         {openEdit ? (
           <EditModal
             openEdit={openEdit}

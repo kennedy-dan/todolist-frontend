@@ -1,20 +1,25 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { resetStatus } from "../store/slice/listSlice";
 
 const EditModal = ({ openEdit, setopenEdit, editTodo, editToDoList }) => {
   const dispatch = useDispatch();
   const [todolistData, settodolistData] = useState(editTodo);
-
+  const { editTodos } = useSelector((state) => state.list);
   const closeModal = () => {
     setopenEdit(false);
   };
   const id = todolistData.id;
-  const todolist = todolistData.todolist
-  console.log(todolist)
-  console.log(id)
+  const todolist = todolistData.todolist;
+  console.log(todolist);
+  console.log(id);
   const submit = () => {
-  const todolist = todolistData.todolist
-    dispatch(editToDoList(todolistData ));
+    const todolist = todolistData.todolist;
+    dispatch(editToDoList(todolistData));
+    if (editTodos.status === "successful") {
+      dispatch(resetStatus());
+      setopenEdit(false);
+    }
   };
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -43,17 +48,10 @@ const EditModal = ({ openEdit, setopenEdit, editTodo, editToDoList }) => {
       tabIndex="-1"
       aria-hidden="true"
     >
-      <div className="flex absolute  items-en justify-center items-center my-40 h-screen pt-4 px-4 pb-20 text-center  sm:p-0 ">
-        <div className="inline-block align-bottom bg-white   rounded-2xl text-left shadow-xl transform transition-all sm:my-8 sm:align-middle h-auto max-w-3xl w-screen">
+      <div className="flex absolute  items-en justify-center h-fit items-center my-40  pt-4 px-4 pb-20 text-center  sm:p-0 ">
+        <div className="inline-block align-bottom bg-white   rounded-2xl text-left shadow-xl transform transition-all sm:my-8 sm:align-middle h-auto max-w-xl md:max-w-3xl w-screen">
           <div className=" py-20 px-12 w-full">
-            <div className="flex w-full justify-end">
-              <img
-                src="/images/cancelModal.png"
-                className="w-8"
-                onClick={closeModal}
-              />
-            </div>
-            <input
+            <textarea
               onKeyPress={handleKeyPress}
               value={todolistData.todolist}
               type="text"
@@ -66,6 +64,12 @@ const EditModal = ({ openEdit, setopenEdit, editTodo, editToDoList }) => {
           </div>
         </div>
       </div>
+      <section
+        className=" w-screen z-[-1] h-screen cursor-pointer "
+        onClick={() => {
+          setopenEdit(false);
+        }}
+      ></section>
     </div>
   );
 };
