@@ -86,7 +86,9 @@ const ToDoList = () => {
   return (
     <div>
       <div className="flex justify-around md:mx-8 mx-3  font-[Poppins]">
-    
+        <div className="md:w-[10%] ">
+           
+        </div>
         <div className="lg:w-[70%] md:w-[90%] w-[100%] mt-10">
           <div className="flex justify-center ">
             <input
