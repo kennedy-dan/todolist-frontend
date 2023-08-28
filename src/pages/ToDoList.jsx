@@ -21,6 +21,7 @@ const ToDoList = () => {
   const submit = () => {
     console.log({ todolist: todolist });
     dispatch(createToDoList({ todolist: todolist }));
+    settodolist('')
   };
   //use enter keywor to send request
   const handleKeyPress = (event) => {
