@@ -18,8 +18,9 @@ const EditModal = ({ openEdit, setopenEdit, editTodo, editToDoList }) => {
     dispatch(editToDoList(todolistData));
     if (editTodos.status === "successful") {
       dispatch(resetStatus());
-      setopenEdit(false);
     }
+    setopenEdit(false);
+
   };
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
