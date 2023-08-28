@@ -81,6 +81,9 @@ const ToDoList = () => {
     setopenEdit(true);
     seteditTodo(todos);
   };
+
+// background colors
+  const colors = ['#D8ecf1', '#E6eee4', '#Ebe4ee', '#Eee7e4', '#Eee4e5'];
  
 
   return (
@@ -110,7 +113,7 @@ const ToDoList = () => {
           {status === "successful" && (
             <div className="grid md:grid-cols-3 grid-cols-2 gap-4 mt-8">
               {todolistData?.map((todos, index) => (
-                <div className="rounded-md h-fit shadow-sm  w- outline-1 px-2 outline-gray-300 outline">
+                <div  style={{ backgroundColor: colors[index % colors.length] }} className="rounded-md h-fit shadow-sm  w- outline-1 px-2 outline-gray-300 outline">
                   <p>{todos.todolist}</p>
                   <div className="flex w-full items-center justify-between">
                     <p className="pt-4 md:text-[12px] text-[10px] font-semibold">
