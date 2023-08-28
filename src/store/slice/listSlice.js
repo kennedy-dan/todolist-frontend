@@ -45,7 +45,7 @@ export const deleteToDoList = createAsyncThunk(
 export const editToDoList = createAsyncThunk(
   "editToDoList",
   async (todolist) => {
-    console.log(todolist.todolist);
+    
 
     const response = await axios.put(`/update/${todolist.id}`, {
       todolist: todolist.todolist,

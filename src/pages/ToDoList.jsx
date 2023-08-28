@@ -19,7 +19,7 @@ const ToDoList = () => {
     (state) => state.list
   );
   const submit = () => {
-    console.log({ todolist: todolist });
+  
     dispatch(createToDoList({ todolist: todolist }));
     settodolist('')
   };
@@ -81,7 +81,7 @@ const ToDoList = () => {
     setopenEdit(true);
     seteditTodo(todos);
   };
-  console.log(editTodo);
+ 
 
   return (
     <div>

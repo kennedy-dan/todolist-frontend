@@ -6,15 +6,11 @@ const EditModal = ({ openEdit, setopenEdit, editTodo, editToDoList }) => {
   const dispatch = useDispatch();
   const [todolistData, settodolistData] = useState(editTodo);
   const { editTodos } = useSelector((state) => state.list);
-  const closeModal = () => {
-    setopenEdit(false);
-  };
-  const id = todolistData.id;
-  const todolist = todolistData.todolist;
-  console.log(todolist);
-  console.log(id);
+
+
+ 
   const submit = () => {
-    const todolist = todolistData.todolist;
+  
     dispatch(editToDoList(todolistData));
     if (editTodos.status === "successful") {
       dispatch(resetStatus());
