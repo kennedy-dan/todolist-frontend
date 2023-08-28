@@ -118,7 +118,7 @@ const ToDoList = () => {
                     </p>
                     <div>
                       <button
-                        className="pt-4"
+                        className="pt-4 pr-4"
                         onClick={() => delteTodo(todos.id)}
                       >
                         <AiOutlineDelete />
