@@ -17,6 +17,9 @@ This is a simple description of the todolist React app.
 1. npm start
 Your browser will open wuth http://localhost:3000
 
+## Base Api
+Change the base api from https://todolist-ifkq.onrender.com to http://localhost:3001 to run on your local
+
 ## Deployment
 
 You can deploy using on any platform of yout choice 
