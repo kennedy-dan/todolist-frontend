@@ -5,6 +5,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    fontFamiy: {
+      "poppins": ['poppins']
+    }
   },
   plugins: [],
 }

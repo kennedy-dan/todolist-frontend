@@ -8,6 +8,10 @@ const initialState = {
     getTodo: {
       status: 'idle',
       alltodolist: null
+    },
+    deleteTodo: {
+      status: 'idle',
+      deletetodo: null
     }
 };
 
@@ -24,6 +28,13 @@ export const getToDoList = createAsyncThunk(
   "getToDoList",
   async () => {
     const response = await axios.get("/todo");
+    return response.data;
+  }
+)
+export const deleteToDoList = createAsyncThunk(
+  "deleteToDoList",
+  async (todo) => {
+    const response = await axios.delete(`/delete/${todo}`);
     return response.data;
   }
 )
@@ -50,6 +61,15 @@ export const listSlice = createSlice({
       .addCase(getToDoList.fulfilled, (state, { payload }) => {
         state.getTodo.status = "successful";
         state.getTodo = payload;
+      });
+      //delete a todo by a passing the id
+      builder
+      .addCase(deleteToDoList.pending, (state) => {
+        state.getTodo.status = "loading";
+      })
+      .addCase(deleteToDoList.fulfilled, (state, { payload }) => {
+        state.deleteTodo.status = "successful";
+        state.deleteTodo.deletetodo = payload;
       });
   },
 });
